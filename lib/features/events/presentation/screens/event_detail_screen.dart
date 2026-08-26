@@ -25,8 +25,13 @@ class EventDetailScreen extends StatefulWidget {
 }
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
+  final ValueNotifier<Set<String>> registeredEventIdsNotifier = ValueNotifier<Set<String>>({});
 
-  final Set<String> _registeredEventIds = {};
+  @override
+  void dispose() {
+    registeredEventIdsNotifier.dispose();
+    super.dispose();
+  }
 
   void _showRegistrationModal(BuildContext context, EventModel event) {
     const goldColor = Color(0xffF2AF34);
@@ -43,7 +48,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           : 'user@domain.com';
     }
 
-    int ticketQuantity = 1;
+    final ValueNotifier<int> ticketQuantityNotifier = ValueNotifier<int>(1);
 
     showModalBottomSheet(
       context: context,
@@ -53,8 +58,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        return StatefulBuilder(
-          builder: (modalCtx, setModalState) {
+        return ValueListenableBuilder<int>(
+          valueListenable: ticketQuantityNotifier,
+          builder: (modalCtx, ticketQuantity, _) {
             final totalPrice = event.price * ticketQuantity;
 
             return Padding(
@@ -246,7 +252,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                 size: 18,
                               ),
                               onPressed: ticketQuantity > 1
-                                  ? () => setModalState(() => ticketQuantity--)
+                                  ? () => ticketQuantityNotifier.value--
                                   : null,
                             ),
                             Text(
@@ -264,7 +270,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                 size: 18,
                               ),
                               onPressed: ticketQuantity < 5
-                                  ? () => setModalState(() => ticketQuantity++)
+                                  ? () => ticketQuantityNotifier.value++
                                   : null,
                             ),
                           ],
@@ -306,9 +312,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     onPressed: () {
                       Navigator.pop(ctx);
-                      setState(() {
-                        _registeredEventIds.add(event.id);
-                      });
+                      registeredEventIdsNotifier.value = {
+                        ...registeredEventIdsNotifier.value,
+                        event.id,
+                      };
 
                       final updatedEvent = event.copyWith(
                         attendeesCount: event.attendeesCount + ticketQuantity,

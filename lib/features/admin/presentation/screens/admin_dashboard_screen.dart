@@ -39,7 +39,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     "${DateTime.now().month}",
   );
   final ValueNotifier<bool> isOnlineNotifier = ValueNotifier<bool>(true);
-  String selectedType = "monthly";
+  final ValueNotifier<String> selectedTypeNotifier = ValueNotifier<String>("monthly");
+
+  @override
+  void dispose() {
+    currentScreenNotifier.dispose();
+    valueListNotifier.dispose();
+    selectedValueNotifier.dispose();
+    isOnlineNotifier.dispose();
+    selectedTypeNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -289,54 +299,57 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                           ),
                                         ),
                                         child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            dropdownColor: const Color(
-                                              0xff2A2A2A,
-                                            ),
-                                            value: selectedType,
-                                            icon: const Icon(
-                                              Icons.calendar_month,
-                                              color: Color(0xffF2AF34),
-                                              size: 18,
-                                            ),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 13,
-                                            ),
-                                            items: const [
-                                              DropdownMenuItem(
-                                                value: "monthly",
-                                                child: Text("Monthly"),
-                                              ),
-                                              DropdownMenuItem(
-                                                value: "yearly",
-                                                child: Text("Yearly"),
-                                              ),
-                                            ],
-                                            onChanged: (value) {
-                                              if (value == null) return;
-                                              setState(() {
-                                                selectedType = value;
-                                                if (selectedType == "monthly") {
-                                                  valueListNotifier.value =
-                                                      List.generate(
-                                                        12,
-                                                        (index) =>
-                                                            "${index + 1}",
-                                                      );
-                                                  selectedValueNotifier.value =
-                                                      "${DateTime.now().month}";
-                                                } else {
-                                                  selectedValueNotifier.value =
-                                                      "${DateTime.now().year}";
-                                                  valueListNotifier
-                                                      .value = List.generate(
-                                                    DateTime.now().year - 2024,
-                                                    (index) =>
-                                                        "${2025 + index}",
-                                                  );
-                                                }
-                                              });
+                                          child: ValueListenableBuilder<String>(
+                                            valueListenable: selectedTypeNotifier,
+                                            builder: (context, selectedType, _) {
+                                              return DropdownButton<String>(
+                                                dropdownColor: const Color(
+                                                  0xff2A2A2A,
+                                                ),
+                                                value: selectedType,
+                                                icon: const Icon(
+                                                  Icons.calendar_month,
+                                                  color: Color(0xffF2AF34),
+                                                  size: 18,
+                                                ),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13,
+                                                ),
+                                                items: const [
+                                                  DropdownMenuItem(
+                                                    value: "monthly",
+                                                    child: Text("Monthly"),
+                                                  ),
+                                                  DropdownMenuItem(
+                                                    value: "yearly",
+                                                    child: Text("Yearly"),
+                                                  ),
+                                                ],
+                                                onChanged: (value) {
+                                                  if (value == null) return;
+                                                  selectedTypeNotifier.value = value;
+                                                  if (value == "monthly") {
+                                                    valueListNotifier.value =
+                                                        List.generate(
+                                                          12,
+                                                          (index) =>
+                                                              "${index + 1}",
+                                                        );
+                                                    selectedValueNotifier.value =
+                                                        "${DateTime.now().month}";
+                                                  } else {
+                                                    selectedValueNotifier.value =
+                                                        "${DateTime.now().year}";
+                                                    valueListNotifier
+                                                        .value = List.generate(
+                                                      DateTime.now().year - 2024,
+                                                      (index) =>
+                                                          "${2025 + index}",
+                                                    );
+                                                  }
+                                                },
+                                              );
                                             },
                                           ),
                                         ),

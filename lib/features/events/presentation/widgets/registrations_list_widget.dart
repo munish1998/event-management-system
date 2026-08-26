@@ -41,27 +41,26 @@ class RegistrationsListWidget extends StatefulWidget {
 
 class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
   final ValueNotifier<int> selectedTabNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<String> searchQueryNotifier = ValueNotifier<String>('');
   final TextEditingController searchController = TextEditingController();
-  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     searchController.addListener(() {
-      setState(() {
-        _searchQuery = searchController.text.trim().toLowerCase();
-      });
+      searchQueryNotifier.value = searchController.text.trim().toLowerCase();
     });
   }
 
   @override
   void dispose() {
     selectedTabNotifier.dispose();
+    searchQueryNotifier.dispose();
     searchController.dispose();
     super.dispose();
   }
 
-  List<AttendeeItem> _generateDynamicAttendees(List<EventModel> events) {
+  List<AttendeeItem> _generateDynamicAttendees(List<EventModel> events, [String query = '']) {
     final List<AttendeeItem> list = [];
     final colors = [
       const Color(0xFFD946EF),
@@ -107,10 +106,10 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
       }
     }
 
-    if (_searchQuery.isNotEmpty) {
+    if (query.isNotEmpty) {
       return list.where((item) {
-        return item.name.toLowerCase().contains(_searchQuery) ||
-            item.ticketType.toLowerCase().contains(_searchQuery);
+        return item.name.toLowerCase().contains(query) ||
+            item.ticketType.toLowerCase().contains(query);
       }).toList();
     }
 
@@ -127,13 +126,17 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
 
         final events = state.allEvents;
         final totalAttendeesCount = events.fold<int>(0, (sum, e) => sum + e.attendeesCount);
-        final attendeesList = _generateDynamicAttendees(events);
         final checkInsCount = (totalAttendeesCount * 0.65).toInt();
         final leadsCount = (totalAttendeesCount * 1.4).toInt();
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        return ValueListenableBuilder<String>(
+          valueListenable: searchQueryNotifier,
+          builder: (context, query, _) {
+            final attendeesList = _generateDynamicAttendees(events, query);
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
             ValueListenableBuilder<int>(
               valueListenable: selectedTabNotifier,
@@ -307,11 +310,13 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
                   );
                 },
               ),
-          ],
-        );
-      },
-    );
-  }
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
   Widget _buildTab(String title, int index, bool isSelected, ValueNotifier<int> notifier) {
     return Expanded(

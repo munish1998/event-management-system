@@ -22,17 +22,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-  bool isSignUp = false;
-  bool isPasswordVisible = false;
-  bool isEmailLoading = false;
-  bool isGoogleLoading = false;
-  String selectedUserType = 'User';
+  final ValueNotifier<bool> isSignUpNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> isPasswordVisibleNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> isEmailLoadingNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> isGoogleLoadingNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<String> selectedUserTypeNotifier = ValueNotifier<String>('User');
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
+    isSignUpNotifier.dispose();
+    isPasswordVisibleNotifier.dispose();
+    isEmailLoadingNotifier.dispose();
+    isGoogleLoadingNotifier.dispose();
+    selectedUserTypeNotifier.dispose();
     super.dispose();
   }
 
@@ -62,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    if (isSignUp) {
+    if (isSignUpNotifier.value) {
       if (!RegExp(r'[A-Z]').hasMatch(password)) {
         Utils.showFlushBar('Password must contain at least 1 uppercase letter (A-Z)', FlushBarType.warn, context);
         return;
@@ -81,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
 
-    if (isSignUp && selectedUserType == 'Admin') {
+    if (isSignUpNotifier.value && selectedUserTypeNotifier.value == 'Admin') {
       if (!email.toLowerCase().endsWith('@admin.com')) {
         Utils.showFlushBar(
           'Admin email must end with @admin.com (e.g. yourname@admin.com)',
@@ -92,12 +97,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
 
-    setState(() {
-      isEmailLoading = true;
-      isGoogleLoading = false;
-    });
+    isEmailLoadingNotifier.value = true;
+    isGoogleLoadingNotifier.value = false;
 
-    if (isSignUp) {
+    if (isSignUpNotifier.value) {
       context.read<AuthBloc>().add(
             AuthSignUpRequested(
               email: email,
@@ -116,10 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submitGoogleAuth() {
-    setState(() {
-      isGoogleLoading = true;
-      isEmailLoading = false;
-    });
+    isGoogleLoadingNotifier.value = true;
+    isEmailLoadingNotifier.value = false;
     context.read<AuthBloc>().add(AuthGoogleSignInRequested());
   }
 
@@ -131,7 +132,6 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-
           Positioned(
             left: -100,
             top: MediaQuery.of(context).size.height * 0.18,
@@ -194,16 +194,12 @@ class _LoginScreenState extends State<LoginScreen> {
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthFailure) {
-                  setState(() {
-                    isEmailLoading = false;
-                    isGoogleLoading = false;
-                  });
+                  isEmailLoadingNotifier.value = false;
+                  isGoogleLoadingNotifier.value = false;
                   Utils.showFlushBar(state.errorMessage, FlushBarType.error, context);
                 } else if (state is Authenticated) {
-                  setState(() {
-                    isEmailLoading = false;
-                    isGoogleLoading = false;
-                  });
+                  isEmailLoadingNotifier.value = false;
+                  isGoogleLoadingNotifier.value = false;
                   Utils.showFlushBar(
                     'Welcome, ${state.user.name} (${state.user.role.name.toUpperCase()})!',
                     FlushBarType.success,
@@ -217,237 +213,255 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               builder: (context, state) {
-                final isLoading = state is AuthLoading;
-
                 return Center(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                     physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-
-                        const AppLogoWidget(size: 110),
-                        const SizedBox(height: 24),
-
-                        const Text(
-                          "Get Started now",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-
-                        Text(
-                          isSignUp
-                              ? "Create an account to explore events & access passes"
-                              : "Create an account or log in to explore about our app",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-
-                        if (isSignUp) ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _buildUserTypeRadio("User", selectedUserType == "User", () {
-                                setState(() => selectedUserType = "User");
-                              }),
-                              const SizedBox(width: 24),
-                              _buildUserTypeRadio("Admin", selectedUserType == "Admin", () {
-                                setState(() => selectedUserType = "Admin");
-                              }),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-
-                          _buildGoldBorderInput(
-                            controller: nameController,
-                            hintText: "Full Name",
-                            icon: Icons.person_outline_rounded,
-                          ),
-                          const SizedBox(height: 14),
-                        ],
-
-                        _buildGoldBorderInput(
-                          controller: emailController,
-                          hintText: "Email Address",
-                          icon: Icons.email_outlined,
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 14),
-
-                        _buildGoldBorderInput(
-                          controller: passwordController,
-                          hintText: "Password",
-                          icon: Icons.lock_outline_rounded,
-                          isPassword: true,
-                          isPasswordVisible: isPasswordVisible,
-                          onTogglePassword: () {
-                            setState(() => isPasswordVisible = !isPasswordVisible);
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: goldColor,
-                              foregroundColor: Colors.black,
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: (state is AuthLoading) ? null : _submitAuth,
-                            child: (isEmailLoading && state is AuthLoading)
-                                ? const LoadingWidget(color: Colors.black, size: 24)
-                                : Text(
-                                    isSignUp ? "Register" : "Login",
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 22),
-
-                        Row(
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: isSignUpNotifier,
+                      builder: (context, isSignUp, _) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(child: Container(height: 1, color: Colors.white24)),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 14),
-                              child: Text(
-                                isSignUp ? "Or register with" : "Or login with",
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Expanded(child: Container(height: 1, color: Colors.white24)),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
+                            const AppLogoWidget(size: 110),
+                            const SizedBox(height: 24),
 
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: (state is AuthLoading) ? null : _submitGoogleAuth,
-                            child: (isGoogleLoading && state is AuthLoading)
-                                ? const LoadingWidget(color: Colors.black, size: 22)
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.network(
-                                        'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
-                                        width: 20,
-                                        height: 20,
-                                        errorBuilder: (context, error, stackTrace) => const Icon(
-                                          Icons.g_mobiledata_rounded,
-                                          color: Colors.redAccent,
-                                          size: 28,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      const Text(
-                                        "Continue with Google",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: goldColor,
-                              foregroundColor: Colors.black,
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                isSignUp = !isSignUp;
-                                selectedUserType = 'Admin';
-                              });
-                            },
-                            child: Text(
-                              isSignUp ? "Already have an account? Sign In" : "Sign up as Admin",
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
+                            const Text(
+                              "Get Started now",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 0.5,
                               ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
+                            const SizedBox(height: 8),
 
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSignUp = !isSignUp;
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: RichText(
-                              text: TextSpan(
-                                text: isSignUp ? "Already have an account? " : "Don't have an account? ",
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 13,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: isSignUp ? "Sign In" : "Sign Up",
-                                    style: const TextStyle(
-                                      color: goldColor,
-                                      fontWeight: FontWeight.bold,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ],
+                            Text(
+                              isSignUp
+                                  ? "Create an account to explore events & access passes"
+                                  : "Create an account or log in to explore about our app",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
+                            const SizedBox(height: 28),
+
+                            if (isSignUp) ...[
+                              ValueListenableBuilder<String>(
+                                valueListenable: selectedUserTypeNotifier,
+                                builder: (context, selectedUserType, _) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildUserTypeRadio("User", selectedUserType == "User", () {
+                                        selectedUserTypeNotifier.value = "User";
+                                      }),
+                                      const SizedBox(width: 24),
+                                      _buildUserTypeRadio("Admin", selectedUserType == "Admin", () {
+                                        selectedUserTypeNotifier.value = "Admin";
+                                      }),
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 16),
+
+                              _buildGoldBorderInput(
+                                controller: nameController,
+                                hintText: "Full Name",
+                                icon: Icons.person_outline_rounded,
+                              ),
+                              const SizedBox(height: 14),
+                            ],
+
+                            _buildGoldBorderInput(
+                              controller: emailController,
+                              hintText: "Email Address",
+                              icon: Icons.email_outlined,
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            const SizedBox(height: 14),
+
+                            ValueListenableBuilder<bool>(
+                              valueListenable: isPasswordVisibleNotifier,
+                              builder: (context, isPasswordVisible, _) {
+                                return _buildGoldBorderInput(
+                                  controller: passwordController,
+                                  hintText: "Password",
+                                  icon: Icons.lock_outline_rounded,
+                                  isPassword: true,
+                                  isPasswordVisible: isPasswordVisible,
+                                  onTogglePassword: () {
+                                    isPasswordVisibleNotifier.value = !isPasswordVisible;
+                                  },
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 20),
+
+                            ValueListenableBuilder<bool>(
+                              valueListenable: isEmailLoadingNotifier,
+                              builder: (context, isEmailLoading, _) {
+                                return SizedBox(
+                                  width: double.infinity,
+                                  height: 48,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: goldColor,
+                                      foregroundColor: Colors.black,
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: (state is AuthLoading) ? null : _submitAuth,
+                                    child: (isEmailLoading && state is AuthLoading)
+                                        ? const LoadingWidget(color: Colors.black, size: 24)
+                                        : Text(
+                                            isSignUp ? "Register" : "Login",
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 0.5,
+                                            ),
+                                          ),
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 22),
+
+                            Row(
+                              children: [
+                                Expanded(child: Container(height: 1, color: Colors.white24)),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                                  child: Text(
+                                    isSignUp ? "Or register with" : "Or login with",
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(child: Container(height: 1, color: Colors.white24)),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+
+                            ValueListenableBuilder<bool>(
+                              valueListenable: isGoogleLoadingNotifier,
+                              builder: (context, isGoogleLoading, _) {
+                                return SizedBox(
+                                  width: double.infinity,
+                                  height: 48,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: Colors.black,
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: (state is AuthLoading) ? null : _submitGoogleAuth,
+                                    child: (isGoogleLoading && state is AuthLoading)
+                                        ? const LoadingWidget(color: Colors.black, size: 22)
+                                        : Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Image.network(
+                                                'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                                                width: 20,
+                                                height: 20,
+                                                errorBuilder: (context, error, stackTrace) => const Icon(
+                                                  Icons.g_mobiledata_rounded,
+                                                  color: Colors.redAccent,
+                                                  size: 28,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              const Text(
+                                                "Continue with Google",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 16),
+
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: goldColor,
+                                  foregroundColor: Colors.black,
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  isSignUpNotifier.value = !isSignUpNotifier.value;
+                                  selectedUserTypeNotifier.value = 'Admin';
+                                },
+                                child: Text(
+                                  isSignUp ? "Already have an account? Sign In" : "Sign up as Admin",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+
+                            GestureDetector(
+                              onTap: () {
+                                isSignUpNotifier.value = !isSignUpNotifier.value;
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: isSignUp ? "Already have an account? " : "Don't have an account? ",
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 13,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: isSignUp ? "Sign In" : "Sign Up",
+                                        style: const TextStyle(
+                                          color: goldColor,
+                                          fontWeight: FontWeight.bold,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 );

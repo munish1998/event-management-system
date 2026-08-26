@@ -15,31 +15,26 @@ class CountdownTimerWidget extends StatefulWidget {
 
 class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
   Timer? _timer;
-  late Map<String, int> _remaining;
+  late final ValueNotifier<Map<String, int>> remainingNotifier;
 
   @override
   void initState() {
     super.initState();
-    _updateRemaining();
+    remainingNotifier = ValueNotifier<Map<String, int>>(DateFormatter.getRemainingTime(widget.targetDate));
     _startTimer();
-  }
-
-  void _updateRemaining() {
-    _remaining = DateFormatter.getRemainingTime(widget.targetDate);
   }
 
   void _startTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
-      setState(() {
-        _updateRemaining();
-      });
+      final updated = DateFormatter.getRemainingTime(widget.targetDate);
+      remainingNotifier.value = updated;
 
-      if (_remaining['days'] == 0 &&
-          _remaining['hours'] == 0 &&
-          _remaining['minutes'] == 0 &&
-          _remaining['seconds'] == 0) {
+      if (updated['days'] == 0 &&
+          updated['hours'] == 0 &&
+          updated['minutes'] == 0 &&
+          updated['seconds'] == 0) {
         _timer?.cancel();
       }
     });
@@ -49,7 +44,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
   void didUpdateWidget(covariant CountdownTimerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.targetDate != widget.targetDate) {
-      _updateRemaining();
+      remainingNotifier.value = DateFormatter.getRemainingTime(widget.targetDate);
       _startTimer();
     }
   }
@@ -57,13 +52,12 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
   @override
   void dispose() {
     _timer?.cancel();
+    remainingNotifier.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    const isLiveOrPast = false;
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -71,17 +65,22 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildTimeUnit(_remaining['days'] ?? 0, 'DAYS'),
-          _buildDivider(),
-          _buildTimeUnit(_remaining['hours'] ?? 0, 'HOURS'),
-          _buildDivider(),
-          _buildTimeUnit(_remaining['minutes'] ?? 0, 'MINS'),
-          _buildDivider(),
-          _buildTimeUnit(_remaining['seconds'] ?? 0, 'SECS'),
-        ],
+      child: ValueListenableBuilder<Map<String, int>>(
+        valueListenable: remainingNotifier,
+        builder: (context, remaining, _) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildTimeUnit(remaining['days'] ?? 0, 'DAYS'),
+              _buildDivider(),
+              _buildTimeUnit(remaining['hours'] ?? 0, 'HOURS'),
+              _buildDivider(),
+              _buildTimeUnit(remaining['minutes'] ?? 0, 'MINS'),
+              _buildDivider(),
+              _buildTimeUnit(remaining['seconds'] ?? 0, 'SECS'),
+            ],
+          );
+        },
       ),
     );
   }
