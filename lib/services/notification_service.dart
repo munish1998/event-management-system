@@ -176,7 +176,7 @@ class NotificationService {
       await init();
       await _notificationsPlugin.show(
         id: 99999,
-        title: '🔔 Astro Converse Event Alert',
+        title: '🔔 Event Management Alert',
         body: 'Push Notification engine is active and working perfectly!',
         notificationDetails: _getNotificationDetails(),
       );

@@ -359,7 +359,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   ) {
     const goldColor = Color(0xffF2AF34);
     final bookingId =
-        "ASTRO-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}";
+        "EVENT-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}";
 
     showDialog(
       context: context,

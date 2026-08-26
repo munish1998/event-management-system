@@ -61,7 +61,7 @@ class EventManagementApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
-          title: 'allevents Organizer',
+          title: 'Event Management System',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           home: const AuthWrapper(),

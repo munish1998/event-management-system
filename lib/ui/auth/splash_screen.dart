@@ -43,16 +43,16 @@ class SplashScreenView extends StatelessWidget {
                 AppLogoWidget(size: 100),
                 SizedBox(height: 24),
                 Text(
-                  'allevents',
+                  'EVENT PORTAL',
                   style: TextStyle(
-                    fontSize: 36,
+                    fontSize: 32,
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: -0.5,
+                    letterSpacing: 1.0,
                   ),
                 ),
                 Text(
-                  'Organizer & Event Platform',
+                  'Real-Time Event Management System',
                   style: TextStyle(
                     color: AppColors.primaryDark,
                     fontSize: 13,

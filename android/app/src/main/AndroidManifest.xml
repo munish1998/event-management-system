@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
-        android:label="Astro Converse"
+        android:label="Event Management System"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
