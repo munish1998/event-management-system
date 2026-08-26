@@ -24,7 +24,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     on<UpdateEventRequested>(_onUpdateEventRequested);
     on<DeleteEventRequested>(_onDeleteEventRequested);
 
-    // Setup periodic 30-second checker for 10-minute pre-event reminders
     _reminderPeriodicTimer = Timer.periodic(const Duration(seconds: 30), (_) {
       if (state is EventsLoaded) {
         NotificationService().checkAndTriggerUpcomingReminders((state as EventsLoaded).allEvents);
@@ -45,10 +44,8 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
             final currentQuery = state is EventsLoaded ? (state as EventsLoaded).searchQuery : '';
             final filtered = _filter(eventsToUse, currentStatus, currentQuery);
 
-            // Check for new events & status changes to trigger Push Notifications
             _checkAndNotifyChanges(eventsToUse);
 
-            // Check 10-minute pre-event reminders
             NotificationService().checkAndTriggerUpcomingReminders(eventsToUse);
 
             emit(EventsLoaded(
@@ -73,7 +70,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   }
 
   void _checkAndNotifyChanges(List<EventModel> currentEvents) {
-    // If first load, populate known cache without spamming
+
     if (_knownEventIds.isEmpty) {
       for (final e in currentEvents) {
         _knownEventIds.add(e.id);
@@ -83,13 +80,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     }
 
     for (final e in currentEvents) {
-      // 1. Newly created event by admin
+
       if (!_knownEventIds.contains(e.id)) {
         _knownEventIds.add(e.id);
         _knownEventStatuses[e.id] = e.status;
         NotificationService().showNewEventNotification(e);
       } else {
-        // 2. Status transitioned to Ongoing / Live
+
         final oldStatus = _knownEventStatuses[e.id];
         if (oldStatus != null && oldStatus != EventStatus.ongoing && e.status == EventStatus.ongoing) {
           NotificationService().showEventLiveNotification(e);

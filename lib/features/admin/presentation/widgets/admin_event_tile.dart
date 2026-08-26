@@ -32,7 +32,7 @@ class AdminEventTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Banner Image & Overlay Icons (Image 2 style)
+
           Stack(
             children: [
               ClipRRect(
@@ -100,7 +100,6 @@ class AdminEventTile extends StatelessWidget {
             ],
           ),
 
-          // Mini Stats Grid: Ticket Sales & Checked In (Image 2 style)
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -164,7 +163,6 @@ class AdminEventTile extends StatelessWidget {
 
           const Divider(color: AppColors.border, height: 1),
 
-          // Action Icon Row: Registrations, Edit, Issue Ticket, Delete (Image 2 style)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Row(

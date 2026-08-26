@@ -39,7 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onCheckRequested(AuthCheckRequested event, Emitter<AuthState> emit) {
-    // Default to unauthenticated on app launch
+
     emit(Unauthenticated());
   }
 }

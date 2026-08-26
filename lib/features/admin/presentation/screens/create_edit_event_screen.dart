@@ -34,11 +34,10 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
   late final TextEditingController descriptionController;
   late final TextEditingController priceController;
 
-  // Existing remote URLs
   late final ValueNotifier<List<String>> remoteImages;
-  // Local files picked on device
+
   final ValueNotifier<List<File>> localImageFiles = ValueNotifier<List<File>>([]);
-  // Video (remote URL and local File)
+
   final ValueNotifier<String?> remoteVideoUrl = ValueNotifier<String?>(null);
   final ValueNotifier<File?> localVideoFile = ValueNotifier<File?>(null);
 
@@ -46,7 +45,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
   late final ValueNotifier<DateTime> startTimeNotifier;
   late final ValueNotifier<DateTime> endTimeNotifier;
 
-  // Upload Progress Tracking
   final ValueNotifier<bool> isUploadingNotifier = ValueNotifier<bool>(false);
   final ValueNotifier<double> uploadProgressNotifier = ValueNotifier<double>(0.0);
   final ValueNotifier<String> uploadStatusTextNotifier = ValueNotifier<String>('');
@@ -99,7 +97,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
     super.dispose();
   }
 
-  /// Pick Event Start Date & Time
   Future<void> _selectStartDateTime() async {
     final now = DateTime.now();
     final pickedDate = await showDatePicker(
@@ -157,7 +154,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
     }
   }
 
-  /// Pick Event End Date & Time
   Future<void> _selectEndDateTime() async {
     final initial = endTimeNotifier.value.isBefore(startTimeNotifier.value)
         ? startTimeNotifier.value.add(const Duration(hours: 2))
@@ -214,7 +210,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
     }
   }
 
-  /// Show picker modal to choose Camera or Gallery for Images
   Future<void> _pickImages() async {
     showModalBottomSheet(
       context: context,
@@ -304,7 +299,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
     );
   }
 
-  /// Pick Short Video (Max 15 seconds) from Gallery
   Future<void> _pickVideo() async {
     try {
       final XFile? picked = await _picker.pickVideo(
@@ -337,7 +331,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
     }
   }
 
-  /// Handle Event Save / Publish with Firebase Storage Upload
   Future<void> _handleSubmit(bool isEdit) async {
     FocusScope.of(context).unfocus();
 
@@ -354,7 +347,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
 
     final eventId = isEdit ? widget.initialEvent!.id : 'evt_${DateTime.now().millisecondsSinceEpoch}';
 
-    // Start upload process if there are local files
     List<String> finalUploadedImages = List<String>.from(remoteImages.value);
     String? finalUploadedVideoUrl = remoteVideoUrl.value;
 
@@ -369,7 +361,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
         final totalUploadTasks = localImageFiles.value.length + (localVideoFile.value != null ? 1 : 0);
         var completedTasks = 0;
 
-        // 1. Upload local images to Firebase Storage
         for (int i = 0; i < localImageFiles.value.length; i++) {
           final file = localImageFiles.value[i];
           uploadStatusTextNotifier.value = 'Uploading image ${i + 1} of ${localImageFiles.value.length}...';
@@ -392,7 +383,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
           uploadProgressNotifier.value = completedTasks / totalUploadTasks;
         }
 
-        // 2. Upload video if selected
         if (localVideoFile.value != null) {
           uploadStatusTextNotifier.value = 'Uploading short video clip...';
           try {
@@ -479,7 +469,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
             children: [
               const SizedBox(height: 12),
 
-              // Media Upload Carousel Widget (Local Files + Remote Images)
               SizedBox(
                 height: 230,
                 child: AnimatedBuilder(
@@ -495,7 +484,7 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                       itemCount: totalMediaCount + 1,
                       itemBuilder: (context, index) {
                         if (index == totalMediaCount) {
-                          // Upload Box Card
+
                           return Center(
                             child: GestureDetector(
                               onTap: _pickImages,
@@ -530,7 +519,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                           );
                         }
 
-                        // Local Picked File Preview
                         if (index < locals.length) {
                           final localFile = locals[index];
                           return Center(
@@ -587,7 +575,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                           );
                         }
 
-                        // Remote URL Preview
                         final remoteIndex = index - locals.length;
                         final image = remotes[remoteIndex];
                         return Center(
@@ -633,7 +620,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                 ),
               ),
 
-              // Short Video Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Column(
@@ -720,13 +706,12 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                 ),
               ),
 
-              // Form Inputs Container
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Title Input
+
                     CustomTextField(
                       controller: nameController,
                       labelText: "Name / Event Title",
@@ -735,7 +720,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Location Input
                     CustomTextField(
                       controller: locationController,
                       labelText: "Location / Venue",
@@ -744,7 +728,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Description Input
                     CustomTextField(
                       controller: descriptionController,
                       labelText: "Description",
@@ -754,7 +737,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Price Input
                     CustomTextField(
                       controller: priceController,
                       labelText: "Ticket Price (₹)",
@@ -764,7 +746,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Start Date & Time Picker
                     ValueListenableBuilder<DateTime>(
                       valueListenable: startTimeNotifier,
                       builder: (context, startTime, _) {
@@ -808,7 +789,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // End Date & Time Picker
                     ValueListenableBuilder<DateTime>(
                       valueListenable: endTimeNotifier,
                       builder: (context, endTime, _) {
@@ -852,7 +832,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Status Dropdown
                     ValueListenableBuilder<EventStatus>(
                       valueListenable: statusNotifier,
                       builder: (context, currentStatus, child) {
@@ -885,7 +864,6 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Add / Update Submit Button with seamless progress
                     ValueListenableBuilder<bool>(
                       valueListenable: isUploadingNotifier,
                       builder: (context, isUploading, _) {

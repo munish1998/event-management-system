@@ -65,7 +65,7 @@ class OnboardingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Header: Branding + Skip Button
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Row(
@@ -106,7 +106,6 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
 
-            // Onboarding PageView
             Expanded(
               child: PageView.builder(
                 controller: pageController,
@@ -122,7 +121,6 @@ class OnboardingScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
 
-                        // Image Card with Overlay Icon
                         Stack(
                           alignment: Alignment.center,
                           children: [
@@ -176,7 +174,6 @@ class OnboardingScreen extends StatelessWidget {
 
                         const SizedBox(height: 24),
 
-                        // Category Pill & Title Card
                         GlassContainer(
                           padding: const EdgeInsets.all(20),
                           child: Column(
@@ -215,12 +212,11 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
 
-            // Bottom Navigation Area: Page Indicators & Action Button
             Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
-                  // Dot Indicators
+
                   ValueListenableBuilder<int>(
                     valueListenable: currentPageNotifier,
                     builder: (context, currentPage, child) {
@@ -247,7 +243,6 @@ class OnboardingScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // Next / Get Started Button
                   ValueListenableBuilder<int>(
                     valueListenable: currentPageNotifier,
                     builder: (context, currentPage, child) {

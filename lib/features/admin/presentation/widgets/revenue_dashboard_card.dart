@@ -26,7 +26,7 @@ class RevenueDashboardCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Main Royal Blue Total Revenue Card (Image 1 style)
+
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
@@ -79,7 +79,6 @@ class RevenueDashboardCard extends StatelessWidget {
 
         const SizedBox(height: 14),
 
-        // Visits & Page Views Row (Image 1 style)
         Row(
           children: [
             Expanded(
@@ -138,7 +137,6 @@ class RevenueDashboardCard extends StatelessWidget {
 
         const SizedBox(height: 14),
 
-        // Ticket Sources Progress Breakdown (Image 1 style)
         GlassContainer(
           padding: const EdgeInsets.all(18),
           child: Column(

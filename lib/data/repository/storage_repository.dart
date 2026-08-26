@@ -7,7 +7,6 @@ class StorageRepository {
   StorageRepository({FirebaseStorage? storage})
       : _storage = storage ?? FirebaseStorage.instance;
 
-  /// Upload image file with optional real-time progress callback
   Future<String> uploadEventImage(
     File file,
     String eventId, {
@@ -15,7 +14,7 @@ class StorageRepository {
   }) async {
     final fileName = 'img_${DateTime.now().millisecondsSinceEpoch}.jpg';
     final ref = _storage.ref().child('events/$eventId/images/$fileName');
-    
+
     final uploadTask = ref.putFile(
       file,
       SettableMetadata(contentType: 'image/jpeg'),
@@ -34,7 +33,6 @@ class StorageRepository {
     return await snapshot.ref.getDownloadURL();
   }
 
-  /// Upload video file with optional real-time progress callback
   Future<String> uploadEventVideo(
     File file,
     String eventId, {
@@ -42,7 +40,7 @@ class StorageRepository {
   }) async {
     final fileName = 'vid_${DateTime.now().millisecondsSinceEpoch}.mp4';
     final ref = _storage.ref().child('events/$eventId/videos/$fileName');
-    
+
     final uploadTask = ref.putFile(
       file,
       SettableMetadata(contentType: 'video/mp4'),

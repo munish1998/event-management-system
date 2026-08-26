@@ -28,7 +28,6 @@ void main() async {
     debugPrint('Firebase Initialization Note: $e');
   }
 
-  // Initialize Local & Push Notification System
   await NotificationService().init();
 
   runApp(const EventManagementApp());

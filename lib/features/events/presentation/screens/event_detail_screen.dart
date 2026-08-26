@@ -25,7 +25,7 @@ class EventDetailScreen extends StatefulWidget {
 }
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
-  // Track local registration state for the session
+
   final Set<String> _registeredEventIds = {};
 
   void _showRegistrationModal(BuildContext context, EventModel event) {
@@ -68,7 +68,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Handle Bar
+
                   Center(
                     child: Container(
                       width: 40,
@@ -81,7 +81,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Header
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -105,7 +104,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   const Divider(color: Colors.white12),
                   const SizedBox(height: 12),
 
-                  // Event Info Card
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -151,7 +149,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Attendee Details
                   const Text(
                     "ATTENDEE DETAILS",
                     style: TextStyle(
@@ -209,7 +206,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Quantity Selector & Price
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -278,7 +274,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Total Summary & Confirm Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -315,7 +310,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         _registeredEventIds.add(event.id);
                       });
 
-                      // Increment attendees count in Event
                       final updatedEvent = event.copyWith(
                         attendeesCount: event.attendeesCount + ticketQuantity,
                       );
@@ -323,10 +317,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         UpdateEventRequested(updatedEvent),
                       );
 
-                      // Trigger notification
                       NotificationService().showInterestedNotification(event);
 
-                      // Show Pass Dialog
                       _showPassSuccessDialog(
                         context,
                         event,
@@ -572,7 +564,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Main Image Carousel Container
+
                     Container(
                       height: 250,
                       decoration: BoxDecoration(
@@ -590,7 +582,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Event Title & Status Badge
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -610,7 +601,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     const SizedBox(height: 10),
 
-                    // Ticket Price Badge
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -645,7 +635,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     const SizedBox(height: 14),
 
-                    // Organizer & Location Info
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
@@ -718,7 +707,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Event Time Countdown Section
                     const Text(
                       "EVENT COUNTDOWN",
                       style: TextStyle(
@@ -732,7 +720,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     CountdownTimerWidget(targetDate: event.startTime),
                     const SizedBox(height: 20),
 
-                    // Date & Time Summary
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
@@ -772,7 +759,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Event Video Teaser (if present)
                     if (event.videoUrl != null &&
                         event.videoUrl!.isNotEmpty) ...[
                       const Text(
@@ -789,7 +775,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       const SizedBox(height: 20),
                     ],
 
-                    // Event Description
                     const Text(
                       "ABOUT THIS EVENT",
                       style: TextStyle(
@@ -815,14 +800,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 ),
               ),
 
-              // Bottom Action Bar: Interested (Heart) + Register Now Button
               Positioned(
                 left: 16,
                 right: 16,
                 bottom: 16,
                 child: Row(
                   children: [
-                    // Favorite / Mark Interested Button
+
                     Container(
                       decoration: BoxDecoration(
                         color: const Color(0xff2A2A2A),
@@ -859,7 +843,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     const SizedBox(width: 12),
 
-                    // Register / Book Pass Button
                     Expanded(
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(

@@ -28,7 +28,6 @@ class MediaUploadPickerWidget extends StatelessWidget {
       await Future.delayed(const Duration(milliseconds: 300));
       uploadProgressNotifier.value = 1.0;
 
-      // Add high quality dummy image URL
       final sampleImages = [
         'https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1000',
         'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=1000',
@@ -66,7 +65,6 @@ class MediaUploadPickerWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
 
-        // Upload Action Buttons Card
         GlassContainer(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -107,7 +105,6 @@ class MediaUploadPickerWidget extends StatelessWidget {
                 ],
               ),
 
-              // Upload Progress Bar
               ValueListenableBuilder<bool>(
                 valueListenable: isUploadingNotifier,
                 builder: (context, isUploading, child) {
@@ -157,7 +154,6 @@ class MediaUploadPickerWidget extends StatelessWidget {
 
         const SizedBox(height: 14),
 
-        // Thumbnail Previews Grid for Images
         ValueListenableBuilder<List<String>>(
           valueListenable: imagesNotifier,
           builder: (context, images, child) {
@@ -243,7 +239,6 @@ class MediaUploadPickerWidget extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // Video Thumbnail Preview
         ValueListenableBuilder<String?>(
           valueListenable: videoNotifier,
           builder: (context, videoUrl, child) {

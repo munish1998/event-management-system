@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isPasswordVisible = false;
   bool isEmailLoading = false;
   bool isGoogleLoading = false;
-  String selectedUserType = 'User'; // 'User' or 'Admin'
+  String selectedUserType = 'User';
 
   @override
   void dispose() {
@@ -46,7 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Email Regex Validation
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(email)) {
       Utils.showFlushBar('Please enter a valid email address', FlushBarType.warn, context);
@@ -63,7 +62,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Password Regex Validation on Signup
     if (isSignUp) {
       if (!RegExp(r'[A-Z]').hasMatch(password)) {
         Utils.showFlushBar('Password must contain at least 1 uppercase letter (A-Z)', FlushBarType.warn, context);
@@ -133,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 1. Radiant Golden Glowing Ambient Orbs matching Screenshot
+
           Positioned(
             left: -100,
             top: MediaQuery.of(context).size.height * 0.18,
@@ -192,7 +190,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-          // 2. Main Content
           SafeArea(
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
@@ -229,11 +226,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Top Golden Zodiac Constellation Emblem
+
                         const AppLogoWidget(size: 110),
                         const SizedBox(height: 24),
 
-                        // "Get Started now" Headline
                         const Text(
                           "Get Started now",
                           style: TextStyle(
@@ -245,7 +241,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 8),
 
-                        // Subtitle
                         Text(
                           isSignUp
                               ? "Create an account to explore events & access passes"
@@ -259,7 +254,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 28),
 
-                        // User Type Selector in Signup mode
                         if (isSignUp) ...[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -275,7 +269,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 16),
 
-                          // Full Name Input (Signup)
                           _buildGoldBorderInput(
                             controller: nameController,
                             hintText: "Full Name",
@@ -284,7 +277,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 14),
                         ],
 
-                        // Email Input
                         _buildGoldBorderInput(
                           controller: emailController,
                           hintText: "Email Address",
@@ -293,7 +285,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 14),
 
-                        // Password Input with Golden Border
                         _buildGoldBorderInput(
                           controller: passwordController,
                           hintText: "Password",
@@ -306,7 +297,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 20),
 
-                        // Primary Gold Button (Login / Register)
                         SizedBox(
                           width: double.infinity,
                           height: 48,
@@ -335,7 +325,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 22),
 
-                        // "Or login with" Divider
                         Row(
                           children: [
                             Expanded(child: Container(height: 1, color: Colors.white24)),
@@ -355,7 +344,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 20),
 
-                        // Google Sign In Button (Pure White)
                         SizedBox(
                           width: double.infinity,
                           height: 48,
@@ -399,7 +387,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        // Secondary Gold Button ("Sign up as Admin" / "Sign In")
                         SizedBox(
                           width: double.infinity,
                           height: 48,
@@ -431,7 +418,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 20),
 
-                        // Footer Toggle Sign In / Sign Up
                         GestureDetector(
                           onTap: () {
                             setState(() {

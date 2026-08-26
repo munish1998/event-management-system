@@ -133,7 +133,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         ),
       ),
 
-      // Bottom Navigation Bar
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
@@ -174,7 +173,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     );
   }
 
-  /// Tab 0: All Live Events
   Widget _buildEventsTab(Color goldColor) {
     return RefreshIndicator(
       onRefresh: () async {
@@ -194,7 +192,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Search Bar
+
             TextField(
               controller: searchController,
               style: const TextStyle(color: Colors.white),
@@ -227,7 +225,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Category Filter Pills
             ValueListenableBuilder<String>(
               valueListenable: categoryFilterNotifier,
               builder: (context, selectedCategory, child) {
@@ -266,7 +263,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Hero Banner Card
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -342,7 +338,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Live Event List
             ValueListenableBuilder<String>(
               valueListenable: categoryFilterNotifier,
               builder: (context, selectedCategory, child) {
@@ -358,7 +353,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                         state.allEvents,
                       );
 
-                      // Apply search query if present
                       if (searchController.text.trim().isNotEmpty) {
                         final q = searchController.text.trim().toLowerCase();
                         filtered = filtered.where((e) {
@@ -368,7 +362,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                         }).toList();
                       }
 
-                      // Apply Category Filter
                       if (selectedCategory == 'UPCOMING') {
                         filtered = filtered
                             .where((e) => e.status == EventStatus.upcoming)
@@ -447,7 +440,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     );
   }
 
-  /// Tab 1: Interested Events
   Widget _buildInterestedTab(Color goldColor) {
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
@@ -580,7 +572,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     );
   }
 
-  /// Tab 2: User Profile Screen
   Widget _buildProfileTab(Color goldColor) {
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
@@ -594,7 +585,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              // User Card Header
+
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -615,7 +606,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                 ),
                 child: Column(
                   children: [
-                    // User Avatar with Golden Ring
+
                     Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
@@ -696,7 +687,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
 
               const SizedBox(height: 18),
 
-              // Activity Stats Row
               Row(
                 children: [
                   Expanded(
@@ -723,7 +713,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
 
               const SizedBox(height: 20),
 
-              // Account Options List
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xff1E1E1E),
@@ -778,7 +767,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
 
               const SizedBox(height: 24),
 
-              // Logout Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(

@@ -75,7 +75,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Top Profile Bar matching Astro Dashboard Header
+
                 ListTile(
                   tileColor: const Color(0xff2A2A2A),
                   title: Text(
@@ -167,7 +167,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   ),
                 ),
 
-                // Screen Content
                 Expanded(
                   child: ValueListenableBuilder<int>(
                     valueListenable: currentScreenNotifier,
@@ -186,7 +185,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               if (currentScreen == 0) ...[
-                                // Create Event Action Button matching "Go Live"
+
                                 ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
@@ -222,7 +221,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 const SizedBox(height: 12),
 
-                                // Online Toggle Row
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -262,7 +260,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 const SizedBox(height: 12),
 
-                                // Filter Header: Your Dashboard + Monthly/Yearly Dropdown
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -349,7 +346,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 const SizedBox(height: 10),
 
-                                // Horizontal Month / Year Selector Pills
                                 SizedBox(
                                   height: 38,
                                   child: ValueListenableBuilder<List<String>>(
@@ -425,7 +421,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 const SizedBox(height: 14),
 
-                                // Revenue Card matching Astro Dashboard First Card
                                 Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
@@ -541,7 +536,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 const SizedBox(height: 12),
 
-                                // Total Orders & Ratings Row matching Astro Dashboard Second Row
                                 Row(
                                   children: [
                                     Expanded(
@@ -674,11 +668,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 const SizedBox(height: 16),
 
-                                // Real-time Event Insights
                                 const LiveInsightsNotificationsWidget(),
                                 const SizedBox(height: 16),
 
-                                // Events List Header
                                 const Text(
                                   "My Live Events (Firebase Sync)",
                                   style: TextStyle(
@@ -689,7 +681,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 const SizedBox(height: 10),
 
-                                // Real-time Events List from BLoC / Firestore
                                 BlocBuilder<EventsBloc, EventsState>(
                                   builder: (context, state) {
                                     if (state is EventsLoading) {
@@ -759,7 +750,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                   },
                                 ),
                               ] else if (currentScreen == 1) ...[
-                                // Events Tab
+
                                 BlocBuilder<EventsBloc, EventsState>(
                                   builder: (context, state) {
                                     if (state is EventsLoaded) {
@@ -809,10 +800,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                   },
                                 ),
                               ] else if (currentScreen == 2) ...[
-                                // Attendees Tab
+
                                 const RegistrationsListWidget(),
                               ] else if (currentScreen == 3) ...[
-                                // Revenue Tab
+
                                 RevenueDashboardCard(
                                   totalRevenue: totalRevenue,
                                   soldCount: totalAttendees,
@@ -825,7 +816,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                   pageViewsCount: pageViewsCount,
                                 ),
                               ] else if (currentScreen == 4) ...[
-                                // Analytics Tab
+
                                 const AnalyticsScreen(),
                               ],
                             ],
@@ -838,7 +829,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ],
             ),
           ),
-          // Exact Bottom Navigation Bar matching HomeBar reference
+
           bottomNavigationBar: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(

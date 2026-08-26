@@ -64,7 +64,7 @@ class OnboardingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Header: Branding + Skip Button
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Row(
@@ -105,7 +105,6 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
 
-            // Onboarding PageView
             Expanded(
               child: PageView.builder(
                 controller: pageController,
@@ -214,7 +213,6 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
 
-            // Bottom Navigation Area
             Padding(
               padding: const EdgeInsets.all(24),
               child: Column(

@@ -28,7 +28,6 @@ class AnalyticsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // Grid Stats Cards
                 Row(
                   children: [
                     Expanded(
@@ -79,7 +78,6 @@ class AnalyticsScreen extends StatelessWidget {
 
                 const SizedBox(height: 28),
 
-                // Category Distribution Section
                 Text(
                   'Status Breakdown',
                   style: AppTypography.headingSmall,
@@ -117,7 +115,6 @@ class AnalyticsScreen extends StatelessWidget {
 
                 const SizedBox(height: 28),
 
-                // Firebase Sync Status Info Card
                 GlassContainer(
                   borderColor: AppColors.primary.withOpacity(0.4),
                   child: Row(

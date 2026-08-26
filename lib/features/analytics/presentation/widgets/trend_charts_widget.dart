@@ -26,7 +26,6 @@ class TrendChartsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 14),
 
-        // Tickets Trend Card (Image 5 style - Gold Amber bars)
         GlassContainer(
           margin: const EdgeInsets.only(bottom: 14),
           padding: const EdgeInsets.all(16),
@@ -61,7 +60,6 @@ class TrendChartsWidget extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Bar Chart Visualization
               SizedBox(
                 height: 90,
                 child: Row(
@@ -82,7 +80,6 @@ class TrendChartsWidget extends StatelessWidget {
           ),
         ),
 
-        // Visits Trend Card (Image 5 style - Green bars)
         GlassContainer(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -116,7 +113,6 @@ class TrendChartsWidget extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Bar Chart Visualization
               SizedBox(
                 height: 90,
                 child: Row(

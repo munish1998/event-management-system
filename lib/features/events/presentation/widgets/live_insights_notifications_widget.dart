@@ -23,7 +23,6 @@ class LiveInsightsNotificationsWidget extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        // Find the event with highest activity or the latest event
         final topActiveEvent = allEvents.firstWhere(
           (e) => e.attendeesCount > 0,
           orElse: () => allEvents.first,
@@ -51,7 +50,6 @@ class LiveInsightsNotificationsWidget extends StatelessWidget {
             ),
             const SizedBox(height: 14),
 
-            // Notification Card 1 (Live Ticket Sales from Real Events)
             TweenAnimationBuilder<double>(
               tween: Tween(begin: 0.95, end: 1.0),
               duration: const Duration(milliseconds: 400),
@@ -113,7 +111,6 @@ class LiveInsightsNotificationsWidget extends StatelessWidget {
               },
             ),
 
-            // Notification Card 2 (Pending Check-Ins / Approvals for Live Events)
             TweenAnimationBuilder<double>(
               tween: Tween(begin: 0.95, end: 1.0),
               duration: const Duration(milliseconds: 600),

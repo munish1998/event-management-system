@@ -29,7 +29,7 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          // Background Gradient Circles
+
           Positioned(
             top: -80,
             right: -80,
@@ -55,7 +55,6 @@ class SplashScreen extends StatelessWidget {
             ),
           ),
 
-          // Main Center Branding matching Image 1
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

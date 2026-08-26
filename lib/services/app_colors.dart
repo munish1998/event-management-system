@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primaryColor = Color(0xFFF5A623);     // Warm Gold
+  static const Color primaryColor = Color(0xFFF5A623);
   static const Color primary = Color(0xFFF5A623);
   static const Color primaryDark = Color(0xFFD98E15);
   static const Color primaryLight = Color(0x33F5A623);
   static const Color goldAccent = Color(0xFFF5A623);
-  
-  static const Color background = Color(0xFF000000);       // Pure Black
-  static const Color surface = Color(0xFF141414);          // Dark Card
+
+  static const Color background = Color(0xFF000000);
+  static const Color surface = Color(0xFF141414);
   static const Color surfaceSecondary = Color(0xFF1E1E1E);
   static const Color surfaceLight = Color(0xFF282828);
 

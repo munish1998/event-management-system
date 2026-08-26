@@ -11,7 +11,6 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
   bool _isInitialized = false;
 
-  // Track event IDs that have already triggered 10-minute alert
   final Set<String> _sentTenMinuteAlerts = {};
 
   static const String channelId = 'events_channel_high';
@@ -45,7 +44,7 @@ class NotificationService {
           AndroidFlutterLocalNotificationsPlugin>();
 
       if (androidPlugin != null) {
-        // Explicitly create the high priority notification channel on Android OS
+
         const AndroidNotificationChannel androidChannel = AndroidNotificationChannel(
           channelId,
           channelName,
@@ -58,7 +57,6 @@ class NotificationService {
 
         await androidPlugin.createNotificationChannel(androidChannel);
 
-        // Request runtime permission for Android 13+ (API 33+)
         final granted = await androidPlugin.requestNotificationsPermission();
         debugPrint('Android Notification Permission Granted: $granted');
       }
@@ -100,10 +98,9 @@ class NotificationService {
     );
   }
 
-  /// 1. Push Notification when a New Event is created
   Future<void> showNewEventNotification(EventModel event) async {
     try {
-      await init(); // Ensure initialized
+      await init();
       final formattedTime = DateFormat('EEE, MMM d • h:mm a').format(event.startTime);
       final id = (event.id.hashCode.abs() % 90000) + 1000;
 
@@ -120,7 +117,6 @@ class NotificationService {
     }
   }
 
-  /// 2. 10-Minute Pre-Event Alert Notification
   Future<void> showTenMinuteReminderNotification(EventModel event) async {
     if (_sentTenMinuteAlerts.contains(event.id)) return;
     _sentTenMinuteAlerts.add(event.id);
@@ -141,7 +137,6 @@ class NotificationService {
     }
   }
 
-  /// 3. Event Live Now Notification
   Future<void> showEventLiveNotification(EventModel event) async {
     try {
       await init();
@@ -159,7 +154,6 @@ class NotificationService {
     }
   }
 
-  /// 4. Marked Interested / Registered Notification
   Future<void> showInterestedNotification(EventModel event) async {
     try {
       await init();
@@ -177,7 +171,6 @@ class NotificationService {
     }
   }
 
-  /// Test Push Notification Trigger
   Future<void> showTestNotification() async {
     try {
       await init();
@@ -193,13 +186,12 @@ class NotificationService {
     }
   }
 
-  /// Check all events and trigger 10-minute pre-event reminders
   void checkAndTriggerUpcomingReminders(List<EventModel> events) {
     final now = DateTime.now();
 
     for (final event in events) {
       final difference = event.startTime.difference(now);
-      // Trigger if starting within next 10 minutes
+
       if (!difference.isNegative && difference.inMinutes <= 10) {
         showTenMinuteReminderNotification(event);
       }

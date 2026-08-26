@@ -42,7 +42,7 @@ class AppLogoWidget extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Inner concentric constellation ring
+
                 Container(
                   width: size * 0.82,
                   height: size * 0.82,
@@ -55,7 +55,6 @@ class AppLogoWidget extends StatelessWidget {
                   ),
                 ),
 
-                // Center Golden Zodiac Hand & Stars Icon Artwork
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

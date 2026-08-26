@@ -35,7 +35,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
       setState(() {
         _updateRemaining();
       });
-      // Stop timer if event has already started
+
       if (_remaining['days'] == 0 &&
           _remaining['hours'] == 0 &&
           _remaining['minutes'] == 0 &&

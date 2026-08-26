@@ -81,7 +81,7 @@ class EventCardWidget extends StatelessWidget {
           ),
           child: Column(
             children: [
-              // Top Event Image & Info Container
+
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: const BoxDecoration(
@@ -94,7 +94,7 @@ class EventCardWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    // Event Thumbnail Image
+
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
@@ -118,7 +118,6 @@ class EventCardWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
 
-                    // Event Meta Data
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +210,6 @@ class EventCardWidget extends StatelessWidget {
                 ),
               ),
 
-              // Bottom Date & Actions Row
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 14,

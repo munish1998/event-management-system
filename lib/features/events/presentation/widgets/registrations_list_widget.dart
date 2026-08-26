@@ -61,7 +61,6 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
     super.dispose();
   }
 
-  // Generate dynamic attendees list based on actual live events
   List<AttendeeItem> _generateDynamicAttendees(List<EventModel> events) {
     final List<AttendeeItem> list = [];
     final colors = [
@@ -135,7 +134,7 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Tabs Header
+
             ValueListenableBuilder<int>(
               valueListenable: selectedTabNotifier,
               builder: (context, selectedTab, child) {
@@ -151,7 +150,6 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
 
             const SizedBox(height: 14),
 
-            // Search Bar with Filter Icon
             Row(
               children: [
                 Expanded(
@@ -187,7 +185,6 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
 
             const SizedBox(height: 14),
 
-            // Attendees List View
             if (attendeesList.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32),
@@ -234,7 +231,7 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
                               : null,
                           child: Row(
                             children: [
-                              // Avatar Circle with Initials
+
                               Container(
                                 width: 44,
                                 height: 44,
@@ -254,7 +251,6 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
                               ),
                               const SizedBox(width: 12),
 
-                              // Details
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +278,6 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
                                 ),
                               ),
 
-                              // Checked-In Status Badge
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                 decoration: BoxDecoration(

@@ -52,7 +52,7 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // App Branding Logo
+
                   const AppLogoWidget(size: 84),
                   const SizedBox(height: 16),
                   Text(
@@ -72,13 +72,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 28),
 
-                  // Login Card Container
                   GlassContainer(
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Tab Selector (Login / Sign Up)
+
                         ValueListenableBuilder<bool>(
                           valueListenable: isSignUpNotifier,
                           builder: (context, isSignUp, child) {
@@ -176,7 +175,6 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
 
-                        // Form Inputs
                         CustomTextField(
                           controller: emailController,
                           labelText: 'Email Address',
@@ -194,7 +192,6 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
 
-                        // Submit Button
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
                             return CustomButton(
@@ -217,7 +214,6 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 28),
 
-                  // Quick Demo Switcher Card
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(

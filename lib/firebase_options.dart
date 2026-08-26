@@ -1,5 +1,4 @@
-// File generated for Firebase Project: event-management-system-8f9e1
-// ignore_for_file: type=lint
+
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
