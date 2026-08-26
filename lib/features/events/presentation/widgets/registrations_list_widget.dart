@@ -197,7 +197,7 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
                       const Icon(Icons.people_outline_rounded, color: Colors.white38, size: 48),
                       const SizedBox(height: 10),
                       Text(
-                        _searchQuery.isEmpty ? "No registrations yet" : "No matching registrations found",
+                        query.isEmpty ? "No registrations yet" : "No matching registrations found",
                         style: const TextStyle(color: Colors.white70, fontSize: 14),
                       ),
                     ],

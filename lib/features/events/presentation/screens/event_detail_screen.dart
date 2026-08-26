@@ -556,7 +556,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             );
           }
           final event = eventList.first;
-          final isRegistered = _registeredEventIds.contains(event.id);
+          final isRegistered = registeredEventIdsNotifier.value.contains(event.id);
 
           return Stack(
             children: [

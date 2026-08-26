@@ -125,7 +125,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                   child: LoadingWidget(
                     color: goldColor,
                     size: 32,
-                    animationType: LoadingAnimationWidget.hexagonDots,
                   ),
                 ),
               );

@@ -377,7 +377,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                               final isSelected =
                                                   selected == list[index];
                                               final titleText =
-                                                  selectedType == "monthly"
+                                                  selectedTypeNotifier.value == "monthly"
                                                   ? DateFormat("MMM").format(
                                                       DateTime(
                                                         DateTime.now().year,
