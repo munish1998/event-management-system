@@ -21,6 +21,8 @@ class OnboardingItem {
 }
 
 class OnboardingScreen extends StatelessWidget {
+  static bool hasSeenOnboarding = false;
+
   const OnboardingScreen({super.key});
 
   static const List<OnboardingItem> pages = [
@@ -53,6 +55,7 @@ class OnboardingScreen extends StatelessWidget {
     final currentPageNotifier = ValueNotifier<int>(0);
 
     void navigateToLogin() {
+      OnboardingScreen.hasSeenOnboarding = true;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),

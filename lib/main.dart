@@ -82,13 +82,18 @@ class AuthWrapper extends StatelessWidget {
         if (state is AuthInitial) {
           return const SplashScreenView();
         } else if (state is Authenticated) {
+          OnboardingScreen.hasSeenOnboarding = true;
           if (state.user.isAdmin) {
             return AdminDashboardScreen(admin: state.user);
           } else {
             return UserDashboardScreen(user: state.user);
           }
         }
-        return const OnboardingScreen();
+
+        if (!OnboardingScreen.hasSeenOnboarding) {
+          return const OnboardingScreen();
+        }
+        return const LoginScreen();
       },
     );
   }
