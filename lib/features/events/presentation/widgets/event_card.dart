@@ -7,6 +7,7 @@ import '../../../../bloc/events_bloc/events_event.dart';
 import '../../../../data/model/event_model.dart';
 import '../../../../services/enum.dart';
 import '../../../../services/utils.dart';
+import '../../../../widgets/cached_image.dart';
 
 class EventCardWidget extends StatelessWidget {
   final EventModel event;
@@ -97,23 +98,13 @@ class EventCardWidget extends StatelessWidget {
 
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        event.images.isNotEmpty
+                      child: CachedImage(
+                        url: event.images.isNotEmpty
                             ? event.images.first
-                            : 'https://images.unsplash.com/photo-1540575467063-178a50c2df87',
+                            : 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
                         width: 90,
                         height: 100,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 90,
-                          height: 100,
-                          color: const Color(0xff2A2A2A),
-                          child: const Icon(
-                            Icons.event_rounded,
-                            color: goldColor,
-                            size: 36,
-                          ),
-                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
