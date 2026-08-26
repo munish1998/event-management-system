@@ -14,6 +14,7 @@ import 'features/admin/presentation/screens/admin_dashboard_screen.dart';
 import 'features/events/presentation/screens/user_dashboard_screen.dart';
 import 'ui/auth/login_screen.dart';
 import 'ui/auth/splash_screen.dart';
+import 'ui/onboarding/onboarding_screen.dart';
 
 import 'services/notification_service.dart';
 
@@ -87,7 +88,7 @@ class AuthWrapper extends StatelessWidget {
             return UserDashboardScreen(user: state.user);
           }
         }
-        return const LoginScreen();
+        return const OnboardingScreen();
       },
     );
   }

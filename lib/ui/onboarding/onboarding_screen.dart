@@ -82,11 +82,12 @@ class OnboardingScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       const Text(
-                        'allevents',
+                        'EVENT PORTAL',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
+                          letterSpacing: 0.8,
                         ),
                       ),
                     ],
