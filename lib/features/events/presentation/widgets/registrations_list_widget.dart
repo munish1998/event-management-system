@@ -98,7 +98,7 @@ class _RegistrationsListWidgetState extends State<RegistrationsListWidget> {
           AttendeeItem(
             name: name,
             ticketType: '${event.title} - Pass',
-            ticketCount: '${i + 1}/${count}',
+            ticketCount: '${i + 1}/$count',
             isCheckedIn: i % 2 == 0,
             avatarColor: color,
           ),

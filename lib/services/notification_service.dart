@@ -20,7 +20,7 @@ class NotificationService {
   Future<void> init() async {
     if (_isInitialized) return;
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings('@mipmap/launcher_icon');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -44,7 +44,6 @@ class NotificationService {
           AndroidFlutterLocalNotificationsPlugin>();
 
       if (androidPlugin != null) {
-
         const AndroidNotificationChannel androidChannel = AndroidNotificationChannel(
           channelId,
           channelName,
@@ -56,9 +55,6 @@ class NotificationService {
         );
 
         await androidPlugin.createNotificationChannel(androidChannel);
-
-        final granted = await androidPlugin.requestNotificationsPermission();
-        debugPrint('Android Notification Permission Granted: $granted');
       }
 
       _isInitialized = true;
@@ -68,10 +64,25 @@ class NotificationService {
     }
   }
 
-  NotificationDetails _getNotificationDetails({
-    Importance importance = Importance.max,
-    Priority priority = Priority.max,
-  }) {
+  Future<bool> requestPermission() async {
+    try {
+      await init();
+      final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+
+      if (androidPlugin != null) {
+        final granted = await androidPlugin.requestNotificationsPermission();
+        debugPrint('Android Notification Permission Result: $granted');
+        return granted ?? false;
+      }
+      return true;
+    } catch (e) {
+      debugPrint('Notification Permission Request Error: $e');
+      return false;
+    }
+  }
+
+  NotificationDetails _getNotificationDetails() {
     const androidDetails = AndroidNotificationDetails(
       channelId,
       channelName,
@@ -79,7 +90,7 @@ class NotificationService {
       importance: Importance.max,
       priority: Priority.max,
       showWhen: true,
-      icon: '@mipmap/ic_launcher',
+      icon: '@mipmap/launcher_icon',
       enableVibration: true,
       playSound: true,
       enableLights: true,

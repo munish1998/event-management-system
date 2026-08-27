@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/auth_bloc/auth_bloc.dart';
 import '../../bloc/auth_bloc/auth_event.dart';
 import '../../bloc/auth_bloc/auth_state.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/widgets/app_logo.dart';
 import '../../main.dart';
 import '../../services/enum.dart';
