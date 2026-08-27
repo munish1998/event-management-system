@@ -67,221 +67,301 @@ class EventCardWidget extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xff1E1E1E),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0x44F2AF34), width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.5),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xff2A2A2A), Color(0xff1A1A1A)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xff1E1E1E),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0x44F2AF34), width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                ),
-                child: Row(
-                  children: [
-
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: CachedImage(
-                        url: event.images.isNotEmpty
-                            ? event.images.first
-                            : 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
-                        width: 90,
-                        height: 100,
-                        fit: BoxFit.cover,
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xff2A2A2A), Color(0xff1A1A1A)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
                     ),
-                    const SizedBox(width: 12),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  event.title,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              _buildStatusBadge(event.status),
-                            ],
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: CachedImage(
+                            url: event.images.isNotEmpty
+                                ? event.images.first
+                                : 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
+                            width: 90,
+                            height: 100,
+                            fit: BoxFit.cover,
                           ),
-                          const SizedBox(height: 6),
-                          Row(
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(
-                                Icons.location_on_rounded,
-                                color: goldColor,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  event.location,
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 12,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      event.title,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                  _buildStatusBadge(event.status),
+                                ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.person_outline_rounded,
-                                color: Colors.white54,
-                                size: 14,
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on_rounded,
+                                    color: goldColor,
+                                    size: 14,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      event.location,
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  "Organized by ${event.createdBy}",
-                                  style: const TextStyle(
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.person_outline_rounded,
                                     color: Colors.white54,
-                                    fontSize: 11,
+                                    size: 14,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      "Organized by ${event.createdBy}",
+                                      style: const TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 11,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.people_rounded,
+                                    color: goldColor,
+                                    size: 14,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "${event.attendeesCount} Attendees Registered",
+                                    style: const TextStyle(
+                                      color: goldColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.people_rounded,
-                                color: goldColor,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                "${event.attendeesCount} Attendees Registered",
-                                style: const TextStyle(
-                                  color: goldColor,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Color(0xff141414),
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(15),
                       ),
                     ),
-                  ],
-                ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time_rounded,
+                              color: goldColor,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              DateFormatter.formatFullDate(event.startTime),
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              margin: const EdgeInsets.only(right: 6),
+                              decoration: BoxDecoration(
+                                color: goldColor.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.chevron_left_rounded,
+                                    color: goldColor,
+                                    size: 14,
+                                  ),
+                                  Text(
+                                    "Slide",
+                                    style: TextStyle(
+                                      color: goldColor,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                event.isInterested
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_border_rounded,
+                                color: event.isInterested
+                                    ? Colors.redAccent
+                                    : goldColor,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                if (onToggleInterested != null) {
+                                  onToggleInterested!();
+                                } else {
+                                  context.read<EventsBloc>().add(
+                                    ToggleEventInterested(event.id),
+                                  );
+                                }
+                              },
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: goldColor,
+                                foregroundColor: Colors.black,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 6,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              onPressed: onTap,
+                              child: const Text(
+                                "Event Details",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                decoration: const BoxDecoration(
-                  color: Color(0xff141414),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(15),
+            ),
+            Positioned(
+              right: 0,
+              top: 30,
+              bottom: 45,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 3,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff2A2416),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      bottomLeft: Radius.circular(8),
+                    ),
+                    border: Border.all(
+                      color: goldColor.withValues(alpha: 0.5),
+                      width: 1,
+                    ),
+                  ),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.chevron_left_rounded,
+                        color: goldColor,
+                        size: 14,
+                      ),
+                      RotatedBox(
+                        quarterTurns: 3,
+                        child: Text(
+                          "SLIDE",
+                          style: TextStyle(
+                            color: goldColor,
+                            fontSize: 7.5,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_left_rounded,
+                        color: goldColor,
+                        size: 14,
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          color: goldColor,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          DateFormatter.formatFullDate(event.startTime),
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            event.isInterested
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-                            color: event.isInterested
-                                ? Colors.redAccent
-                                : goldColor,
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            if (onToggleInterested != null) {
-                              onToggleInterested!();
-                            } else {
-                              context.read<EventsBloc>().add(
-                                ToggleEventInterested(event.id),
-                              );
-                            }
-                          },
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: goldColor,
-                            foregroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 6,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          onPressed: onTap,
-                          child: const Text(
-                            "Event Details",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

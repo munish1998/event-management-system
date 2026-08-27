@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../widgets/loading_widget.dart';
 
 class VideoPlayerWidget extends StatefulWidget {

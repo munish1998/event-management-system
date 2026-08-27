@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -363,7 +364,7 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
 
         for (int i = 0; i < localImageFiles.value.length; i++) {
           final file = localImageFiles.value[i];
-          uploadStatusTextNotifier.value = 'Uploading image ${i + 1} of ${localImageFiles.value.length}...';
+          uploadStatusTextNotifier.value = 'Processing image ${i + 1} of ${localImageFiles.value.length}...';
 
           try {
             final downloadUrl = await _storageRepo.uploadEventImage(
@@ -376,15 +377,21 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
             );
             finalUploadedImages.add(downloadUrl);
           } catch (storageErr) {
-            debugPrint("Firebase Storage Image upload fallback to local file path: $storageErr");
-            finalUploadedImages.add(file.path);
+            debugPrint("Firebase Storage Image upload fallback to base64: $storageErr");
+            try {
+              final bytes = await file.readAsBytes();
+              final base64Image = 'data:image/jpeg;base64,${base64Encode(bytes)}';
+              finalUploadedImages.add(base64Image);
+            } catch (e) {
+              finalUploadedImages.add(file.path);
+            }
           }
           completedTasks++;
           uploadProgressNotifier.value = completedTasks / totalUploadTasks;
         }
 
         if (localVideoFile.value != null) {
-          uploadStatusTextNotifier.value = 'Uploading short video clip...';
+          uploadStatusTextNotifier.value = 'Processing video clip...';
           try {
             final vidUrl = await _storageRepo.uploadEventVideo(
               localVideoFile.value!,
@@ -396,7 +403,7 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
             );
             finalUploadedVideoUrl = vidUrl;
           } catch (vidErr) {
-            debugPrint("Firebase Storage Video upload fallback to local file path: $vidErr");
+            debugPrint("Firebase Storage Video upload fallback to local path: $vidErr");
             finalUploadedVideoUrl = localVideoFile.value!.path;
           }
           completedTasks++;
@@ -423,7 +430,7 @@ class _CreateEditEventScreenState extends State<CreateEditEventScreen> {
       createdBy: widget.initialEvent?.createdBy ?? 'alex@admin.com',
       images: finalUploadedImages.isNotEmpty
           ? finalUploadedImages
-          : ['https://images.unsplash.com/photo-1540575467063-178a50c2df87'],
+          : EventModel.defaultEventImages.take(3).toList(),
       videoUrl: finalUploadedVideoUrl,
       attendeesCount: widget.initialEvent?.attendeesCount ?? 0,
       price: double.tryParse(priceController.text.trim()) ?? 299.0,

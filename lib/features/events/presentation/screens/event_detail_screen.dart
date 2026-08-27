@@ -36,10 +36,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   void _showRegistrationModal(BuildContext context, EventModel event) {
     const goldColor = Color(0xffF2AF34);
     final authState = context.read<AuthBloc>().state;
-    String userName = 'User';
-    String userEmail = 'user@domain.com';
+    final bool isAdmin =
+        authState is Authenticated && authState.user.role == UserRole.admin;
 
-    if (authState is Authenticated) {
+    String userName = 'Attendee User';
+    String userEmail = 'attendee@domain.com';
+
+    if (authState is Authenticated && !isAdmin) {
       userName = authState.user.name.isNotEmpty
           ? authState.user.name
           : 'Attendee';
@@ -48,6 +51,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           : 'user@domain.com';
     }
 
+    final TextEditingController attendeeNameController =
+        TextEditingController(text: isAdmin ? '' : userName);
+    final TextEditingController attendeeEmailController =
+        TextEditingController(text: isAdmin ? '' : userEmail);
     final ValueNotifier<int> ticketQuantityNotifier = ValueNotifier<int>(1);
 
     showModalBottomSheet(
@@ -70,279 +77,388 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 top: 20,
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.white24,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Event Registration & Pass",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.white24,
+                          borderRadius: BorderRadius.circular(2),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.close_rounded,
-                          color: Colors.white70,
-                        ),
-                        onPressed: () => Navigator.pop(ctx),
-                      ),
-                    ],
-                  ),
-                  const Divider(color: Colors.white12),
-                  const SizedBox(height: 12),
-
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff2A2A2A),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white12),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 16),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          event.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.location_on_rounded,
-                              color: goldColor,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                event.location.isNotEmpty
-                                    ? event.location
-                                    : "Online / Venue",
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
+                            if (isAdmin)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
                                 ),
+                                margin: const EdgeInsets.only(right: 8),
+                                decoration: BoxDecoration(
+                                  color: goldColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(color: goldColor, width: 1),
+                                ),
+                                child: const Text(
+                                  "ADMIN",
+                                  style: TextStyle(
+                                    color: goldColor,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            Text(
+                              isAdmin
+                                  ? "Issue Ticket to Attendee"
+                                  : "Event Registration & Pass",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
                         ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: Colors.white70,
+                          ),
+                          onPressed: () => Navigator.pop(ctx),
+                        ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
+                    const Divider(color: Colors.white12),
+                    const SizedBox(height: 12),
 
-                  const Text(
-                    "ATTENDEE DETAILS",
-                    style: TextStyle(
-                      color: goldColor,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff2A2A2A),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: goldColor,
-                          radius: 18,
-                          child: Text(
-                            userName.substring(0, 1).toUpperCase(),
+                    // Event Summary Card
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff2A2A2A),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.white12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            event.title,
                             style: const TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
+                              fontSize: 15,
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          const SizedBox(height: 4),
+                          Row(
                             children: [
+                              const Icon(
+                                Icons.location_on_rounded,
+                                color: goldColor,
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  event.location.isNotEmpty
+                                      ? event.location
+                                      : "Online / Venue",
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    Text(
+                      isAdmin ? "ATTENDEE DETAILS" : "YOUR DETAILS",
+                      style: const TextStyle(
+                        color: goldColor,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    if (isAdmin) ...[
+                      TextField(
+                        controller: attendeeNameController,
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                        decoration: InputDecoration(
+                          hintText: 'Attendee Full Name (e.g. John Doe)',
+                          hintStyle: const TextStyle(
+                            color: Colors.white38,
+                            fontSize: 13,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.person_outline_rounded,
+                            color: goldColor,
+                            size: 20,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xff2A2A2A),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: attendeeEmailController,
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: 'Attendee Email (e.g. attendee@mail.com)',
+                          hintStyle: const TextStyle(
+                            color: Colors.white38,
+                            fontSize: 13,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.email_outlined,
+                            color: goldColor,
+                            size: 20,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xff2A2A2A),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ] else ...[
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff2A2A2A),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: goldColor,
+                              radius: 18,
+                              child: Text(
+                                userName.isNotEmpty
+                                    ? userName.substring(0, 1).toUpperCase()
+                                    : 'U',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    userName,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Text(
+                                    userEmail,
+                                    style: const TextStyle(
+                                      color: Colors.white54,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "PASS QUANTITY",
+                              style: TextStyle(
+                                color: goldColor,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "₹ ${event.price.toStringAsFixed(0)} / pass",
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xff2A2A2A),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.white12),
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                onPressed: ticketQuantity > 1
+                                    ? () => ticketQuantityNotifier.value--
+                                    : null,
+                              ),
                               Text(
-                                userName,
+                                "$ticketQuantity",
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: 16,
                                 ),
                               ),
-                              Text(
-                                userEmail,
-                                style: const TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 12,
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: goldColor,
+                                  size: 18,
                                 ),
+                                onPressed: ticketQuantity < 10
+                                    ? () => ticketQuantityNotifier.value++
+                                    : null,
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 20),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "PASS QUANTITY",
-                            style: TextStyle(
-                              color: goldColor,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "₹ ${event.price.toStringAsFixed(0)} / pass",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xff2A2A2A),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.white12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Total Amount:",
+                          style: TextStyle(color: Colors.white70, fontSize: 14),
                         ),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              onPressed: ticketQuantity > 1
-                                  ? () => ticketQuantityNotifier.value--
-                                  : null,
-                            ),
-                            Text(
-                              "$ticketQuantity",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.add,
-                                color: goldColor,
-                                size: 18,
-                              ),
-                              onPressed: ticketQuantity < 5
-                                  ? () => ticketQuantityNotifier.value++
-                                  : null,
-                            ),
-                          ],
+                        Text(
+                          totalPrice == 0
+                              ? "FREE"
+                              : "₹ ${totalPrice.toStringAsFixed(0)}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: goldColor,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
+                      onPressed: () {
+                        final String finalAttendeeName = isAdmin
+                            ? (attendeeNameController.text.trim().isNotEmpty
+                                ? attendeeNameController.text.trim()
+                                : 'Registered Attendee')
+                            : userName;
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Total Amount:",
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
-                      ),
-                      Text(
-                        totalPrice == 0
-                            ? "FREE"
-                            : "₹ ${totalPrice.toStringAsFixed(0)}",
+                        Navigator.pop(ctx);
+
+                        if (!isAdmin) {
+                          registeredEventIdsNotifier.value = {
+                            ...registeredEventIdsNotifier.value,
+                            event.id,
+                          };
+                        }
+
+                        final updatedEvent = event.copyWith(
+                          attendeesCount: event.attendeesCount + ticketQuantity,
+                        );
+                        context.read<EventsBloc>().add(
+                          UpdateEventRequested(updatedEvent),
+                        );
+
+                        NotificationService().showInterestedNotification(event);
+
+                        if (isAdmin) {
+                          Utils.showFlushBar(
+                            'Ticket successfully issued to $finalAttendeeName!',
+                            FlushBarType.success,
+                            context,
+                          );
+                        }
+
+                        _showPassSuccessDialog(
+                          context,
+                          event,
+                          finalAttendeeName,
+                          ticketQuantity,
+                          isAdmin: isAdmin,
+                        );
+                      },
+                      child: Text(
+                        isAdmin
+                            ? "CONFIRM & ISSUE ATTENDEE PASS"
+                            : "CONFIRM & GET DIGITAL PASS",
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          letterSpacing: 0.5,
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: goldColor,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                     ),
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      registeredEventIdsNotifier.value = {
-                        ...registeredEventIdsNotifier.value,
-                        event.id,
-                      };
-
-                      final updatedEvent = event.copyWith(
-                        attendeesCount: event.attendeesCount + ticketQuantity,
-                      );
-                      context.read<EventsBloc>().add(
-                        UpdateEventRequested(updatedEvent),
-                      );
-
-                      NotificationService().showInterestedNotification(event);
-
-                      _showPassSuccessDialog(
-                        context,
-                        event,
-                        userName,
-                        ticketQuantity,
-                      );
-                    },
-                    child: const Text(
-                      "CONFIRM & GET DIGITAL PASS",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
@@ -355,8 +471,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     BuildContext context,
     EventModel event,
     String userName,
-    int quantity,
-  ) {
+    int quantity, {
+    bool isAdmin = false,
+  }) {
     const goldColor = Color(0xffF2AF34);
     final bookingId =
         "EVENT-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}";
@@ -388,9 +505,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  "Registration Confirmed!",
-                  style: TextStyle(
+                Text(
+                  isAdmin ? "Ticket Issued Successfully!" : "Registration Confirmed!",
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -398,7 +515,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "Booking ID: $bookingId",
+                  isAdmin ? "Pass Generated • ID: $bookingId" : "Booking ID: $bookingId",
                   style: const TextStyle(
                     color: goldColor,
                     fontWeight: FontWeight.bold,
@@ -557,6 +674,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           }
           final event = eventList.first;
           final isRegistered = registeredEventIdsNotifier.value.contains(event.id);
+          final authState = context.read<AuthBloc>().state;
+          final bool isAdmin =
+              authState is Authenticated && authState.user.role == UserRole.admin;
 
           return Stack(
             children: [
@@ -853,9 +973,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     Expanded(
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isRegistered
-                              ? const Color(0xff10B981)
-                              : goldColor,
+                          backgroundColor: isAdmin
+                              ? goldColor
+                              : (isRegistered
+                                  ? const Color(0xff10B981)
+                                  : goldColor),
                           foregroundColor: Colors.black,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
@@ -864,23 +986,31 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           elevation: 4,
                         ),
                         icon: Icon(
-                          isRegistered
-                              ? Icons.check_circle_rounded
-                              : Icons.confirmation_number_rounded,
+                          isAdmin
+                              ? Icons.confirmation_number_rounded
+                              : (isRegistered
+                                  ? Icons.check_circle_rounded
+                                  : Icons.confirmation_number_rounded),
                           size: 20,
-                          color: isRegistered ? Colors.white : Colors.black,
+                          color: (!isAdmin && isRegistered)
+                              ? Colors.white
+                              : Colors.black,
                         ),
                         label: Text(
-                          isRegistered
-                              ? "REGISTERED (VIEW PASS)"
-                              : event.price == 0
-                              ? "REGISTER NOW (FREE)"
-                              : "REGISTER NOW • ₹ ${event.price.toStringAsFixed(0)}",
+                          isAdmin
+                              ? "ISSUE ATTENDEE TICKET • ₹ ${event.price.toStringAsFixed(0)}"
+                              : (isRegistered
+                                  ? "REGISTERED (VIEW PASS)"
+                                  : event.price == 0
+                                      ? "REGISTER NOW (FREE)"
+                                      : "REGISTER NOW • ₹ ${event.price.toStringAsFixed(0)}"),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                             letterSpacing: 0.5,
-                            color: isRegistered ? Colors.white : Colors.black,
+                            color: (!isAdmin && isRegistered)
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                         onPressed: () {
